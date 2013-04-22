@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Nick DiRienzo</title>
+        {% block extra_css %}{% endblock %}
+        {% block extra_js %}{% endblock %}
+    </head>
+<body>
+    <div id="wrapper">
+        {% block body %}
+            <div id="nav">
+                <p><a href="/">Home</a> | <a href="/archives.html">Archives</a></p>
+            </div>
+            <div id="header">
+                <h1>Nick DiRienzo</h1>
+                {% block header %}{% endblock %}
+            </div>
+
+            <div id="main">
+                {% block main %}{% endblock %}
+            </div>
+
+            <div id="footer">
+                {% block footer %}{% endblock %}
+            </div>
+        {% endblock %}
+    </div>
+</body>
+</html>
