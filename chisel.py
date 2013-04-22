@@ -5,6 +5,9 @@
 # 
 # Requires:
 # jinja2
+# markdown
+
+# Modified by Nick DiRienzo
 
 import datetime
 import sys, re, time, os, codecs
