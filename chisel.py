@@ -17,7 +17,7 @@ import jinja2, markdown
 SOURCE = "./posts/" #end with slash
 DESTINATION = "./export/" #end with slash
 HOME_SHOW = 15 #numer of entries to show on homepage
-TEMPLATE_PATH = "./templates/"
+TEMPLATE_PATH = "./templates/default/"
 TEMPLATE_OPTIONS = {}
 TEMPLATES = {
     'home': "home.html",
@@ -54,8 +54,8 @@ def get_tree(source):
         for name in fs:
             if name[0] == ".": continue
             path = os.path.join(root, name)
-            ext = path.split('.')[-1]
-            if ext == 'md' or ext == 'markdown':
+            ext = os.path.splitext(path)[1]
+            if ext == '.md' or ext == '.markdown':
                 with open(path, 'rU') as f:
                     title = f.readline()
                     date = time.strptime(f.readline().strip(), ENTRY_TIME_FORMAT)
@@ -64,7 +64,7 @@ def get_tree(source):
                         'title': title,
                         'epoch': time.mktime(date),
                         'content': FORMAT(''.join(f.readlines()[1:]).decode('UTF-8')),
-                        'url': '/'.join([str(year), "%.2d" % month, os.path.splitext(name)[0] + ".html"]),
+                        'url': os.path.join(str(year), '%.2d' % month, os.path.splitext(name)[0]),
                         'pretty_date': time.strftime(TIME_FORMAT, date),
                         'date': date,
                         'year': year,
@@ -106,12 +106,12 @@ def detail_pages(f, e):
     """Generate detail pages of individual posts"""
     template = e.get_template(TEMPLATES['detail'])
     for file in f:
-        write_file(file['url'], template.render(entry=file))
+        write_file(os.path.join(file['url'], 'index.html'), template.render(entry=file))
 
 @command
 def serve():
     import BaseHTTPServer, SimpleHTTPServer
-    os.chdir(DESTINATION)
+    os.chdir(DESTINATION) # assume that we are in the top dir
     address = ('127.0.0.1', 8080)
     httpd = BaseHTTPServer.HTTPServer(address, SimpleHTTPServer.SimpleHTTPRequestHandler)
     print 'Listening on port:', str(address[1])
@@ -139,7 +139,15 @@ def main():
     if len(sys.argv) == 2:
         if sys.argv[1] in COMMANDS:
             COMMANDS[sys.argv[1]]()
-    else:
+        else:
+            print '''usage: python chisel.py [<command>]
+
+Possible commands:
+    serve       Run a local server to preview your generated content
+    new         Create a new post and bring up vim to edit it
+'''
+
+    elif len(sys.argv) == 1:
         print "Chiseling..."
         print "\tReading files...",
         files = sorted(get_tree(SOURCE), cmp=compare_entries)
@@ -151,6 +159,7 @@ def main():
             step(files, env)
         print "\tDone."
         print "Done."
+        
 
 if __name__ == "__main__":
     sys.exit(main())
