@@ -1,5 +1,7 @@
 Chisel
 David Zhou
+
+Modified by Nick DiRienzo
 ==========
 
 USAGE
@@ -9,13 +11,12 @@ $ python chisel.py
 
 Added support for:
 1. Local previewing
-```
+
 $ python chisel.py serve
-```
+
 2. Automated post creation
-```
+
 $ python chisel.py new
-```
 
 
 SAMPLE ENTRY
