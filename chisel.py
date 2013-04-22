@@ -6,6 +6,7 @@
 # Requires:
 # jinja2
 
+import datetime
 import sys, re, time, os, codecs
 import jinja2, markdown
 
@@ -28,6 +29,7 @@ FORMAT = lambda text: markdown.markdown(text, ['footnotes',])
 #########
 
 STEPS = []
+COMMANDS = dict()
 
 def step(func):
     def wrapper(*args, **kwargs):
@@ -35,6 +37,12 @@ def step(func):
         func(*args, **kwargs)
         print "Done."
     STEPS.append(wrapper)
+    return wrapper
+
+def command(func):
+    def wrapper(*args, **kwargs):
+        func(*args, **kwargs)
+    COMMANDS[func.__name__] = wrapper
     return wrapper
 
 def get_tree(source):
@@ -97,18 +105,48 @@ def detail_pages(f, e):
     for file in f:
         write_file(file['url'], template.render(entry=file))
 
+@command
+def serve():
+    import BaseHTTPServer, SimpleHTTPServer
+    address = ('127.0.0.1', 8080)
+    httpd = BaseHTTPServer.HTTPServer(address, SimpleHTTPServer.SimpleHTTPRequestHandler)
+    print 'Listening on port:', str(address[1])
+    httpd.serve_forever()
+
+@command
+def new():
+    import subprocess
+    title = raw_input("Enter post title: ")
+    filename = ''.join(['-'.join(title.split()), '.md'])
+    path = os.path.join(SOURCE, filename)
+    if os.path.exists(path):
+        print 'Post %s already exists. Exiting.' % title
+    else:
+        with open(path, 'w') as f:
+            f.write(title)
+            f.write('\r\n')
+            f.write(datetime.date.today().strftime(ENTRY_TIME_FORMAT))
+            f.write('\r\n')
+            f.write('\r\n')
+            f.write('\r\n')
+        subprocess.call(['vim', path])
+
 def main():
-    print "Chiseling..."
-    print "\tReading files...",
-    files = sorted(get_tree(SOURCE), cmp=compare_entries)
-    env = jinja2.Environment(loader=jinja2.FileSystemLoader(TEMPLATE_PATH), **TEMPLATE_OPTIONS)
-    print "Done."
-    print "\tRunning steps..."
-    for step in STEPS:
-        print "\t\t",
-        step(files, env)
-    print "\tDone."
-    print "Done."
+    if len(sys.argv) == 2:
+        if sys.argv[1] in COMMANDS:
+            COMMANDS[sys.argv[1]]()
+    else:
+        print "Chiseling..."
+        print "\tReading files...",
+        files = sorted(get_tree(SOURCE), cmp=compare_entries)
+        env = jinja2.Environment(loader=jinja2.FileSystemLoader(TEMPLATE_PATH), **TEMPLATE_OPTIONS)
+        print "Done."
+        print "\tRunning steps..."
+        for step in STEPS:
+            print "\t\t",
+            step(files, env)
+        print "\tDone."
+        print "Done."
 
 if __name__ == "__main__":
     sys.exit(main())
