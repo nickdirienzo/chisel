@@ -108,6 +108,7 @@ def detail_pages(f, e):
 @command
 def serve():
     import BaseHTTPServer, SimpleHTTPServer
+    os.chdir(DESTINATION)
     address = ('127.0.0.1', 8080)
     httpd = BaseHTTPServer.HTTPServer(address, SimpleHTTPServer.SimpleHTTPRequestHandler)
     print 'Listening on port:', str(address[1])
