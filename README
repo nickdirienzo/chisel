@@ -7,6 +7,16 @@ USAGE
 
 $ python chisel.py
 
+Added support for:
+1. Local previewing
+```
+$ python chisel.py serve
+```
+2. Automated post creation
+```
+$ python chisel.py new
+```
+
 
 SAMPLE ENTRY
 ===========
@@ -81,6 +91,10 @@ FORMAT:
 Callable that takes in text and returns formatted
 text.
 Default: FORMAT = lambda text: markdown.markdown(text, ['footnotes',]) 
+
+## Modifications
+* Commandline tools (documented in Usage).
+* Only attempts to render posts that have the extension md or markdown.
 
 
 
