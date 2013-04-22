@@ -10,7 +10,7 @@ import sys, re, time, os, codecs
 import jinja2, markdown
 
 #Settings
-SOURCE = "./blog/" #end with slash
+SOURCE = "./posts/" #end with slash
 DESTINATION = "./export/" #end with slash
 HOME_SHOW = 15 #numer of entries to show on homepage
 TEMPLATE_PATH = "./templates/"
@@ -43,23 +43,24 @@ def get_tree(source):
         for name in fs:
             if name[0] == ".": continue
             path = os.path.join(root, name)
-            f = open(path, "rU")
-            title = f.readline()
-            date = time.strptime(f.readline().strip(), ENTRY_TIME_FORMAT)
-            year, month, day = date[:3]
-            files.append({
-                'title': title,
-                'epoch': time.mktime(date),
-                'content': FORMAT(''.join(f.readlines()[1:]).decode('UTF-8')),
-                'url': '/'.join([str(year), "%.2d" % month, "%.2d" % day, os.path.splitext(name)[0] + ".html"]),
-                'pretty_date': time.strftime(TIME_FORMAT, date),
-                'date': date,
-                'year': year,
-                'month': month,
-                'day': day,
-                'filename': name,
-            })
-            f.close()
+            ext = path.split('.')[-1]
+            if ext == 'md' or ext == 'markdown':
+                with open(path, 'rU') as f:
+                    title = f.readline()
+                    date = time.strptime(f.readline().strip(), ENTRY_TIME_FORMAT)
+                    year, month, day = date[:3]
+                    files.append({
+                        'title': title,
+                        'epoch': time.mktime(date),
+                        'content': FORMAT(''.join(f.readlines()[1:]).decode('UTF-8')),
+                        'url': '/'.join([str(year), "%.2d" % month, os.path.splitext(name)[0] + ".html"]),
+                        'pretty_date': time.strftime(TIME_FORMAT, date),
+                        'date': date,
+                        'year': year,
+                        'month': month,
+                        'day': day,
+                        'filename': name,
+                    })
     return files
 
 def compare_entries(x, y):
