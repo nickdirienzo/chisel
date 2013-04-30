@@ -9,9 +9,11 @@
 
 # Modified by Nick DiRienzo
 
+import calendar
 import datetime
 import sys, re, time, os, codecs
 import jinja2, markdown
+import slugify
 
 #Settings
 SOURCE = "./posts/" #end with slash
@@ -54,9 +56,9 @@ def get_tree(source):
         for name in fs:
             if name[0] == ".": continue
             path = os.path.join(root, name)
-            ext = os.path.splitext(path)[1]
-            slug = '-'.join(os.path.splitext(path)[0].split('/')[-1].split('-')[3:])
-            if ext == '.md' or ext == '.markdown':
+            slug, ext = os.path.splitext(path)
+            slug = slug.split('/')[-1]
+            if ext == '.md':
                 with open(path, 'rU') as f:
                     title = f.readline()
                     date = time.strptime(f.readline().strip(), ENTRY_TIME_FORMAT)
@@ -121,10 +123,8 @@ def serve():
 @command
 def new():
     import subprocess
-    post_format = '%Y-%m-%d-'
-    today = datetime.date.today()
     title = raw_input("Enter post title: ")
-    filename = ''.join([today.strftime(post_format), '-'.join(title.split()).lower(), '.md'])
+    filename = ''.join([str(slugify.slugify(unicode(title))), '.md'])
     path = os.path.join(SOURCE, filename)
     if os.path.exists(path):
         print 'Post %s already exists. Exiting.' % title
