@@ -1,13 +1,24 @@
 {% extends "base.html" %}
 
-{% block main %}
-    {% for entry in entries %}
-        <div class="entry">
-            <h2><a href="/{{ entry.url }}">{{ entry.title }}</a></h2>
-            <h3>{{ entry.pretty_date }}</h3>
-            <div class="entry_content">
-                {{ entry.content|truncate }}
+{% block content %}
+        <div class="jumbotron">
+            <h1>Hey There!</h1>
+            <p class="lead">I'm Nick. Nice to meet you. I'm a second-year computer science undergraduate at <a href="http://www.buffalo.edu/" target="_blank">SUNY Buffalo</a>. I enjoy building things, going to hackathons, and making terrible jokes.</p>
+        </div>
+        <hr>
+        <div class="row-fluid">
+            <div class="span12">
+                <h4>Recent Posts</h4>
             </div>
         </div>
-    {% endfor %}
+        {% for entry in entries %}
+        <div class="row-fluid">
+            <div class="span6">
+                <a href="/{{ entry.url }}">{{ entry.title }}</a>
+            </div>
+            <div class="span6" style="text-align: right">
+                {{ entry.pretty_date }}
+            </div>
+        </div>
+        {% endfor %}
 {% endblock %}

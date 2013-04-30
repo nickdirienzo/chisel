@@ -2,28 +2,32 @@
 <html>
     <head>
         <title>Nick DiRienzo</title>
-        {% block extra_css %}{% endblock %}
-        {% block extra_js %}{% endblock %}
+        <link href="/static/css/bootstrap.css" rel="stylesheet">
+        <link href="/static/css/base.css" rel="stylesheet">
+        <link href="/static/css/boostrap-responsive.css" rel="stylesheet">
     </head>
-<body>
-    <div id="wrapper">
-        {% block body %}
-            <div id="nav">
-                <p><a href="/">Home</a> | <a href="/archives.html">Archives</a></p>
-            </div>
-            <div id="header">
-                <h1>Nick DiRienzo</h1>
-                {% block header %}{% endblock %}
-            </div>
-
-            <div id="main">
-                {% block main %}{% endblock %}
+    <body>
+        <div class="container-narrow">
+            
+            <div class="masthead">
+                <ul class="nav nav-pills pull-right">
+                    <li><a href="/about/">About</a></li>
+                    <li><a href="/archive/">Archive</a></li>
+                    <li><a href="/projects/">Projects</a></li>
+                </ul>
+                <h3><a href="/">Nick DiRienzo</a></h3>
             </div>
 
-            <div id="footer">
-                {% block footer %}{% endblock %}
+            <hr>
+
+            {% block content %}{% endblock %}
+
+            <hr>
+
+            <div class="footer">
+                <p>You can find me on <a href="https://twitter.com/nickdirienzo" target="_blank">Twitter</a>, and <a href="https://github.com/nickdirienzo" target="_blank">GitHub</a>.</p>
             </div>
-        {% endblock %}
-    </div>
-</body>
+
+        </div>
+    </body>
 </html>

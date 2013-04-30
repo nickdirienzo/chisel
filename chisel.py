@@ -18,15 +18,18 @@ import slugify
 #Settings
 SOURCE = "./posts/" #end with slash
 DESTINATION = "./export/" #end with slash
-HOME_SHOW = 15 #numer of entries to show on homepage
+HOME_SHOW = 5 #numer of entries to show on homepage
 TEMPLATE_PATH = "./templates/nick.dirienzo.co/"
 TEMPLATE_OPTIONS = {}
 TEMPLATES = {
     'home': "home.html",
     'detail': "detail.html",
     'archive': "archive.html",
+    'about': 'about.html',
+    'projects': 'projects.html'
 }
-TIME_FORMAT = "%B %d, %Y"
+STATIC_PATH = './static/'
+TIME_FORMAT = "%b %d, %Y"
 ENTRY_TIME_FORMAT = "%m/%d/%Y"
 #FORMAT should be a callable that takes in text
 #and returns formatted text
@@ -93,6 +96,16 @@ def write_file(url, data):
     file.close()
 
 @step
+def gen_about(f, e):
+    template = e.get_template(TEMPLATES['about'])
+    write_file(os.path.join('about', 'index.html'), template.render())
+
+@step
+def gen_projects(f, e):
+    template = e.get_template(TEMPLATES['projects'])
+    write_file(os.path.join('projects', 'index.html'), template.render())
+
+@step
 def generate_homepage(f, e):
     """Generate homepage"""
     template = e.get_template(TEMPLATES['home'])
@@ -102,7 +115,7 @@ def generate_homepage(f, e):
 def master_archive(f, e):
     """Generate master archive list of all entries"""
     template = e.get_template(TEMPLATES['archive'])
-    write_file("archives.html", template.render(entries=f))
+    write_file(os.path.join('archive', 'index.html'), template.render(entries=f))
 
 @step
 def detail_pages(f, e):
@@ -110,6 +123,11 @@ def detail_pages(f, e):
     template = e.get_template(TEMPLATES['detail'])
     for file in f:
         write_file(os.path.join(file['url'], 'index.html'), template.render(entry=file))
+
+@step
+def copy_static(f, e):
+    import distutils.dir_util
+    distutils.dir_util.copy_tree(STATIC_PATH, os.path.join(DESTINATION, 'static'))
 
 @command
 def serve():
