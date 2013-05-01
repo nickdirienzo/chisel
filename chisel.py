@@ -98,24 +98,24 @@ def write_file(url, data):
 @step
 def gen_about(f, e):
     template = e.get_template(TEMPLATES['about'])
-    write_file(os.path.join('about', 'index.html'), template.render())
+    write_file(os.path.join('about', 'index.html'), template.render(page='about'))
 
 @step
 def gen_projects(f, e):
     template = e.get_template(TEMPLATES['projects'])
-    write_file(os.path.join('projects', 'index.html'), template.render())
+    write_file(os.path.join('projects', 'index.html'), template.render(page='projects'))
 
 @step
 def generate_homepage(f, e):
     """Generate homepage"""
     template = e.get_template(TEMPLATES['home'])
-    write_file("index.html", template.render(entries=f[:HOME_SHOW]))
+    write_file("index.html", template.render(entries=f[:HOME_SHOW], page='home'))
 
 @step
 def master_archive(f, e):
     """Generate master archive list of all entries"""
     template = e.get_template(TEMPLATES['archive'])
-    write_file(os.path.join('archive', 'index.html'), template.render(entries=f))
+    write_file(os.path.join('archive', 'index.html'), template.render(entries=f, page='archive'))
 
 @step
 def detail_pages(f, e):
@@ -142,7 +142,7 @@ def serve():
 def new():
     import subprocess
     title = raw_input("Enter post title: ")
-    filename = ''.join([str(slugify.slugify(unicode(title))), '.md'])
+    filename = ''.join([slugify.slugify(title), '.md'])
     path = os.path.join(SOURCE, filename)
     if os.path.exists(path):
         print 'Post %s already exists. Exiting.' % title

@@ -1,10 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-        <div class="page-header">
-            <h1>Blog Archive <small>All The Posts</small></h1>
-        </div>
-        {% for year, year_list in entries|groupby('year')|reverse %}
+       {% for year, year_list in entries|groupby('year')|reverse %}
         <div class="row-fluid">
             <div class="span12">
                 <h3>{{ year }}</h3>
@@ -12,10 +9,10 @@
         </div>
         {% for entry in year_list %}
         <div class="row-fluid">
-            <div class="span6">
+            <div class="span8">
                 <a href="/{{ entry.url }}">{{ entry.title }}</a>
             </div>    
-            <div class="span6" style="text-align: right">
+            <div class="span4" style="text-align: right">
                 {{ entry.pretty_date }}
             </div>
         </div>

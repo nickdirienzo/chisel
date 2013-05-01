@@ -1,4 +1,18 @@
+body {
+    font-family: Helvetica, Arial, Sans-Serif, Serif;
+}
+
 .container-narrow {
     margin: 0 auto;
     max-width: 600px;
+}
+
+.post {
+    font-size: 1.2em;
+    line-height: 2em;
+    font-family: Helvetica, Arial, Sans-Serif, Serif;
+}
+
+.post li {
+    line-height: 2em;
 }
