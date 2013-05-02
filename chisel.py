@@ -18,7 +18,7 @@ import slugify
 #Settings
 SOURCE = "./posts/" #end with slash
 DESTINATION = "./export/" #end with slash
-HOME_SHOW = 5 #numer of entries to show on homepage
+HOME_SHOW = 0 #numer of entries to show on homepage
 TEMPLATE_PATH = "./templates/nick.dirienzo.co/"
 TEMPLATE_OPTIONS = {}
 TEMPLATES = {
@@ -109,9 +109,10 @@ def gen_projects(f, e):
 def generate_homepage(f, e):
     """Generate homepage"""
     template = e.get_template(TEMPLATES['home'])
-    write_file("index.html", template.render(entries=f[:HOME_SHOW], page='home'))
+    write_file("index.html", template.render(entries=f, page='home'))
 
-@step
+# Uncomment the below line to bring the archive back. We generate it on the home page now.
+#@step
 def master_archive(f, e):
     """Generate master archive list of all entries"""
     template = e.get_template(TEMPLATES['archive'])
