@@ -1,18 +1,47 @@
 body {
+    background-color: #F1F1EB;
+    color: #424242;
     font-family: Helvetica, Arial, Sans-Serif, Serif;
+}
+
+a {
+    color: #00628B;
+}
+
+a:hover,
+a:focus {
+    color: #FF1300;
+    text-decoration: none;
+}
+
+hr {
+    border-top: 1px solid #424242;
+    border-bottom: 1px solid #F1F1EB;
 }
 
 .container-narrow {
     margin: 0 auto;
     max-width: 600px;
+    padding: 2em;
 }
 
-.post {
+.nobg .active a:hover,
+.nobg > li > a:hover {
+    color: #FF1300;
+    background-color: #F1F1EB;
+}
+
+.nobg .active a {
+    color: #00628B;
+    background-color: #F1F1EB;
+}
+
+.content,
+.footer {
     font-size: 1.2em;
     line-height: 2em;
-    font-family: Helvetica, Arial, Sans-Serif, Serif;
 }
 
-.post li {
+.content li {
     line-height: 2em;
 }

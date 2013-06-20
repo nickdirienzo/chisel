@@ -60,7 +60,7 @@ def get_tree(source):
             if name[0] == ".": continue
             path = os.path.join(root, name)
             slug, ext = os.path.splitext(path)
-            slug = slug.split('/')[-1]
+            slug = ''.join([slug.split('/')[-1], '.html'])
             if ext == '.md':
                 with open(path, 'rU') as f:
                     title = f.readline()
@@ -123,7 +123,23 @@ def detail_pages(f, e):
     """Generate detail pages of individual posts"""
     template = e.get_template(TEMPLATES['detail'])
     for file in f:
-        write_file(os.path.join(file['url'], 'index.html'), template.render(entry=file))
+        write_file(file['url'], template.render(entry=file))
+
+@step
+def dir_archive(files, env):
+    """ For every year and year-month directory, generate an archive page (just so the URL still works) """
+    template = env.get_template(TEMPLATES['archive'])
+    for f in files:
+        e_path = os.path.join(DESTINATION, str(f['year']).zfill(2), 'index.html')
+        w_path = os.path.join(str(f['year']).zfill(2), 'index.html')
+        if not os.path.isfile(e_path):
+            write_file(w_path, template.render(entries=filter(lambda x: x if x['year'] == f['year'] else None, files), page='archive'))
+
+        e_path = os.path.join(DESTINATION, str(f['year']).zfill(2), str(f['month']).zfill(2), 'index.html')
+        w_path = os.path.join(str(f['year']).zfill(2), str(f['month']).zfill(2), 'index.html')
+        if not os.path.isfile(e_path):
+            write_file(w_path, template.render(entries=filter(lambda x: x if x['month'] == f['month'] and x['year'] == f['year'] else None, files), page='archive'))
+
 
 @step
 def copy_static(f, e):
@@ -145,6 +161,7 @@ def new():
     title = raw_input("Enter post title: ")
     filename = ''.join([slugify.slugify(title), '.md'])
     path = os.path.join(SOURCE, filename)
+    today = datetime.datetime.now()
     if os.path.exists(path):
         print 'Post %s already exists. Exiting.' % title
     else:
